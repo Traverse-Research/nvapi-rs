@@ -27,6 +27,21 @@ nvenum! {
     }
 }
 
+impl TryFrom<u32> for VsyncMode {
+    type Error = ();
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Self::Default),
+            1 => Ok(Self::Off),
+            2 => Ok(Self::On),
+            3 => Ok(Self::Adaptive),
+            4 => Ok(Self::AdaptiveHalf),
+            _ => Err(()),
+        }
+    }
+}
+
 nvenum! {
     pub enum NVDRS_SETTING_LOCATION / DrsSettingLocation {
         NVDRS_CURRENT_PROFILE_LOCATION / Current = 0,
