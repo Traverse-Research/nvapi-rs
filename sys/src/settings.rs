@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use crate::{
     handles::{self, NvDRSProfileHandle},
-    NvAPI_Status,
+    NvAPI_Status, MAKE_NVAPI_VERSION,
 };
 
 pub const NVAPI_UNICODE_STRING_MAX: usize = 2048;
@@ -50,6 +50,12 @@ impl Debug for NvSettingValue {
     }
 }
 
+impl Default for NvSettingValue {
+    fn default() -> Self {
+        Self { value_u32: 0u32 }
+    }
+}
+
 nvstruct! {
     pub struct NVDRS_SETTING {
         pub version: u32,
@@ -61,6 +67,22 @@ nvstruct! {
         pub isPredefinedValid: u32,
         pub predefinedValue: NvSettingValue,
         pub currentValue: NvSettingValue,
+    }
+}
+
+impl Default for NVDRS_SETTING {
+    fn default() -> Self {
+        Self {
+            version: MAKE_NVAPI_VERSION::<NVDRS_SETTING>(1),
+            settingName: [0u16; NVAPI_UNICODE_STRING_MAX],
+            settingId: 0,
+            settingType: 0i32,
+            settingLocation: 0i32,
+            isCurrentPredefined: 0u32,
+            isPredefinedValid: 0u32,
+            predefinedValue: Default::default(),
+            currentValue: Default::default(),
+        }
     }
 }
 
