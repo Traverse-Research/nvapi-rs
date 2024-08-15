@@ -19,11 +19,13 @@ nvenum! {
 
 nvenum! {
     pub enum NVAPI_VSYNC_MODE / VsyncMode {
-        NVAPI_VSYNC_DEFAULT / Default = 0,
-        NVAPI_VSYNC_OFF / Off = 1,
-        NVAPI_VSYNC_ON / On = 2,
-        NVAPI_VSYNC_ADAPTIVE / Adaptive = 3,
-        NVAPI_VSYNC_ADAPTIVE_HALF_REFRESH_RATE / AdaptiveHalf = 4,
+        VSYNCMODE_PASSIVE / Passive = 0x60925292,
+        VSYNCMODE_FORCEOFF / ForceOff = 0x08416747,
+        VSYNCMODE_FORCEON / ForceOn = 0x47814940,
+        VSYNCMODE_FLIPINTERVAL2 / FlipInterval2 = 0x32610244,
+        VSYNCMODE_FLIPINTERVAL3 / FlipInterval3 = 0x71271021,
+        VSYNCMODE_FLIPINTERVAL4 / FlipInterval4 = 0x13245256,
+        VSYNCMODE_VIRTUAL / Virtual = 0x18888888,
     }
 }
 
@@ -32,11 +34,13 @@ impl TryFrom<u32> for VsyncMode {
 
     fn try_from(value: u32) -> Result<Self, Self::Error> {
         match value {
-            0 => Ok(Self::Default),
-            1 => Ok(Self::Off),
-            2 => Ok(Self::On),
-            3 => Ok(Self::Adaptive),
-            4 => Ok(Self::AdaptiveHalf),
+            0x60925292 => Ok(Self::Passive),
+            0x08416747 => Ok(Self::ForceOff),
+            0x47814940 => Ok(Self::ForceOn),
+            0x32610244 => Ok(Self::FlipInterval2),
+            0x71271021 => Ok(Self::FlipInterval3),
+            0x13245256 => Ok(Self::FlipInterval4),
+            0x18888888 => Ok(Self::Virtual),
             _ => Err(()),
         }
     }
@@ -58,8 +62,8 @@ nvstruct! {
     }
 }
 
-#[derive(Copy, Clone)]
 #[repr(C)]
+#[derive(Copy, Clone)]
 pub union NvSettingValue {
     pub value_u32: u32,
     pub value_binary: NVDRS_BINARY_SETTING,
