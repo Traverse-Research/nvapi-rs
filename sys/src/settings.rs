@@ -36,11 +36,18 @@ nvenum! {
     }
 }
 
+nvstruct! {
+    pub struct NVDRS_BINARY_SETTING {
+        pub valueLength: u32,
+        pub valueData: [u8; NVAPI_BINARY_DATA_MAX],
+    }
+}
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union NvSettingValue {
     pub value_u32: u32,
-    pub value_binary: [u8; NVAPI_BINARY_DATA_MAX],
+    pub value_binary: NVDRS_BINARY_SETTING,
     pub value_unicode: [u16; NVAPI_UNICODE_STRING_MAX],
 }
 
