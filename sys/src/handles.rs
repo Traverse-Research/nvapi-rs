@@ -95,4 +95,12 @@ nv_declare_handle! {
 
 pub const NVDX_SWAPCHAIN_NONE: NVDX_SwapChainHandle = NVDX_SwapChainHandle(0 as *const _);
 
+nv_declare_handle! {
+    NvDRSSessionHandle
+}
+
+nv_declare_handle! {
+    NvDRSProfileHandle
+}
+
 pub const NVAPI_DEFAULT_HANDLE: usize = 0;

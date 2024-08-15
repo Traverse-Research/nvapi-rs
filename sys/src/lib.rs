@@ -33,6 +33,7 @@ pub mod i2c;
 pub mod dx;
 
 pub mod dispcontrol;
+pub mod settings;
 
 pub use nvid::Api;
 pub use nvapi::nvapi_QueryInterface;
