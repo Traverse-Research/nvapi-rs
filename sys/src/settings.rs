@@ -118,6 +118,11 @@ nvapi! {
 }
 
 nvapi! {
+    pub type DRS_DestroySessionFn = extern "C" fn(hNvDRSSessionHandle: handles::NvDRSSessionHandle) -> NvAPI_Status;
+    pub unsafe fn NvAPI_DRS_DestroySession;
+}
+
+nvapi! {
     pub type DRS_LoadSettingsFn = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle) -> NvAPI_Status;
     pub unsafe fn NvAPI_DRS_LoadSettings;
 }
