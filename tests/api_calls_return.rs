@@ -1,11 +1,10 @@
-// Tests in this file call apis an simply expect them to return without causing 
+// Tests in this file call apis an simply expect them to return without causing
 // segfaults, etc.
 
 // Not actually testing results. Just calling the api.
 #![allow(unused_must_use)]
 
 extern crate nvapi;
-
 
 #[test]
 fn physicalgpu_display_ids_connected() {
@@ -18,7 +17,6 @@ fn physicalgpu_display_ids_connected() {
         }
     }
 }
-
 
 #[test]
 fn physicalgpu_display_ids_all() {

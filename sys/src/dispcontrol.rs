@@ -1,6 +1,6 @@
-use std::os::raw::c_char;
-use crate::status::NvAPI_Status;
 use crate::handles;
+use crate::status::NvAPI_Status;
+use std::os::raw::c_char;
 
 nvapi! {
     pub type EnumNvidiaDisplayHandleFn = extern "C" fn(thisEnum: u32, pNvDispHandle: *mut handles::NvDisplayHandle) -> NvAPI_Status;
@@ -41,4 +41,3 @@ nvapi! {
     /// associated with the given display name (such as "\\DISPLAY1").
     pub unsafe fn NvAPI_DISP_GetAssociatedUnAttachedNvidiaDisplayHandle;
 }
-

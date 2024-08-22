@@ -3,22 +3,22 @@
 
 pub use nvapi_sys as sys;
 
-mod types;
-mod pstate;
 mod clock;
-mod thermal;
 mod gpu;
-mod info;
 #[cfg(feature = "i2c")]
 mod i2c_impl;
+mod info;
+mod pstate;
+mod thermal;
+mod types;
 
-pub use types::*;
-pub use pstate::*;
 pub use clock::*;
-pub use thermal::*;
 pub use gpu::*;
-pub use info::*;
 #[cfg(feature = "i2c")]
 pub use i2c_impl::*;
+pub use info::*;
+pub use pstate::*;
+pub use thermal::*;
+pub use types::*;
 
-pub use sys::{Status, Result};
+pub use sys::{Result, Status};

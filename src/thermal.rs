@@ -1,7 +1,7 @@
-use log::trace;
-use crate::sys::gpu::{thermal, cooler};
 use crate::sys;
-use crate::types::{Percentage, Celsius, CelsiusShifted, Range, RawConversion};
+use crate::sys::gpu::{cooler, thermal};
+use crate::types::{Celsius, CelsiusShifted, Percentage, Range, RawConversion};
+use log::trace;
 
 pub use sys::gpu::thermal::{ThermalController, ThermalTarget};
 
@@ -37,7 +37,10 @@ impl RawConversion for thermal::NV_GPU_THERMAL_SETTINGS {
 
     fn convert_raw(&self) -> Result<Self::Target, Self::Error> {
         trace!("convert_raw({:#?})", self);
-        self.sensor[..self.count as usize].iter().map(RawConversion::convert_raw).collect()
+        self.sensor[..self.count as usize]
+            .iter()
+            .map(RawConversion::convert_raw)
+            .collect()
     }
 }
 
@@ -75,7 +78,8 @@ impl RawConversion for thermal::private::NV_GPU_THERMAL_INFO {
 
     fn convert_raw(&self) -> Result<Self::Target, Self::Error> {
         trace!("convert_raw({:#?})", self);
-        self.entries[..self.count as usize].iter()
+        self.entries[..self.count as usize]
+            .iter()
             .map(RawConversion::convert_raw)
             .collect::<Result<_, _>>()
             .map(|t| (self.flags as _, t))
@@ -109,13 +113,16 @@ impl RawConversion for thermal::private::NV_GPU_CLIENT_THERMAL_POLICIES_STATUS {
 
     fn convert_raw(&self) -> Result<Self::Target, Self::Error> {
         trace!("convert_raw({:#?})", self);
-        self.entries[..self.flags as usize].iter()
+        self.entries[..self.flags as usize]
+            .iter()
             .map(RawConversion::convert_raw)
             .collect::<Result<_, _>>()
     }
 }
 
-pub use sys::gpu::cooler::private::{CoolerType, CoolerController, CoolerPolicy, CoolerTarget, CoolerControl};
+pub use sys::gpu::cooler::private::{
+    CoolerControl, CoolerController, CoolerPolicy, CoolerTarget, CoolerType,
+};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Cooler {
@@ -164,7 +171,10 @@ impl RawConversion for cooler::private::NV_GPU_COOLER_SETTINGS {
 
     fn convert_raw(&self) -> Result<Self::Target, Self::Error> {
         trace!("convert_raw({:#?})", self);
-        self.cooler[..self.count as usize].iter().map(RawConversion::convert_raw).collect()
+        self.cooler[..self.count as usize]
+            .iter()
+            .map(RawConversion::convert_raw)
+            .collect()
     }
 }
 
@@ -232,7 +242,11 @@ impl RawConversion for cooler::private::NV_GPU_COOLER_POLICY_TABLE {
         trace!("convert_raw({:#?})", self);
         Ok(CoolerPolicyTable {
             policy: CoolerPolicy::from_raw(self.policy)?,
-            levels: self.policyCoolerLevel.iter().map(RawConversion::convert_raw).collect::<Result<_, _>>()?,
+            levels: self
+                .policyCoolerLevel
+                .iter()
+                .map(RawConversion::convert_raw)
+                .collect::<Result<_, _>>()?,
         })
     }
 }

@@ -4,8 +4,8 @@
 #[macro_use]
 mod macros;
 
-pub mod nvid;
 pub mod nvapi;
+pub mod nvid;
 pub mod status;
 pub mod types;
 
@@ -33,15 +33,16 @@ pub mod i2c;
 pub mod dx;
 
 pub mod dispcontrol;
+pub mod gsync;
 pub mod settings;
 
-pub use nvid::Api;
 pub use nvapi::nvapi_QueryInterface;
-pub use types::*;
+pub use nvid::Api;
 pub use status::{NvAPI_Status, Status};
+pub use types::*;
 
-use std::result;
 use std::convert::Infallible;
+use std::result;
 
 /// The result of a fallible NVAPI call.
 pub type Result<T> = result::Result<T, Status>;
@@ -66,7 +67,7 @@ impl From<ArgumentRangeError> for Status {
 
 impl From<Infallible> for ArgumentRangeError {
     fn from(e: Infallible) -> Self {
-        match e { }
+        match e {}
     }
 }
 

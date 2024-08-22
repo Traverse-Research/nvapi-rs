@@ -240,7 +240,10 @@ macro_rules! nvversion {
         mod $name {
             #[test]
             fn $name() {
-                assert_eq!(crate::types::GET_NVAPI_SIZE(super::$name), ::std::mem::size_of::<super::$struct>());
+                assert_eq!(
+                    crate::types::GET_NVAPI_SIZE(super::$name),
+                    ::std::mem::size_of::<super::$struct>()
+                );
             }
         }
     };
@@ -251,4 +254,3 @@ macro_rules! nvversion {
         }*/
     };
 }
-
