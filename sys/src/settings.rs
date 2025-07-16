@@ -112,6 +112,36 @@ impl Default for NVDRS_SETTING {
     }
 }
 
+nvstruct! {
+    pub struct NVDRS_APPLICATION {
+        pub version: u32,
+        pub isPredefined: u32,
+        pub appName: [u16; NVAPI_UNICODE_STRING_MAX],
+        pub userFriendlyName: [u16; NVAPI_UNICODE_STRING_MAX],
+        pub launcher: [u16; NVAPI_UNICODE_STRING_MAX],
+        pub fileInFolder: [u16; NVAPI_UNICODE_STRING_MAX],
+        // This single u32 holds `isMetro` (bit 0), `isCommandLine` (bit 1), and
+        // `reserved` (bits 2–31).
+        pub flags: u32,
+        pub commandLine:  [u16; NVAPI_UNICODE_STRING_MAX],
+    }
+}
+
+impl Default for NVDRS_APPLICATION {
+    fn default() -> Self {
+        Self {
+            version: MAKE_NVAPI_VERSION::<NVDRS_APPLICATION>(4),
+            isPredefined: 0,
+            appName: [0; NVAPI_UNICODE_STRING_MAX],
+            userFriendlyName: [0; NVAPI_UNICODE_STRING_MAX],
+            launcher: [0; NVAPI_UNICODE_STRING_MAX],
+            fileInFolder: [0; NVAPI_UNICODE_STRING_MAX],
+            flags: 0,
+            commandLine: [0; NVAPI_UNICODE_STRING_MAX],
+        }
+    }
+}
+
 nvapi! {
     pub type DRS_CreateSessionFn = extern "C" fn(pNvDRSSessionHandle: *mut handles::NvDRSSessionHandle) -> NvAPI_Status;
     pub unsafe fn NvAPI_DRS_CreateSession;
@@ -125,6 +155,16 @@ nvapi! {
 nvapi! {
     pub type DRS_LoadSettingsFn = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle) -> NvAPI_Status;
     pub unsafe fn NvAPI_DRS_LoadSettings;
+}
+
+nvapi! {
+    pub type DRS_FindApplicationByNameFn = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle, appName: [u16; NVAPI_UNICODE_STRING_MAX], pNvDRSProfileHandle: *mut NvDRSProfileHandle, pNvDRSApplication: *mut NVDRS_APPLICATION) -> NvAPI_Status;
+    pub unsafe fn NvAPI_DRS_FindApplicationByName;
+}
+
+nvapi! {
+    pub type DRS_GetCurrentGlobalProfile = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle, pNvDRSProfileHandle: *mut NvDRSProfileHandle) -> NvAPI_Status;
+    pub unsafe fn NvAPI_DRS_GetCurrentGlobalProfile;
 }
 
 nvapi! {
