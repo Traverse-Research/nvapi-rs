@@ -163,7 +163,7 @@ nvapi! {
 }
 
 nvapi! {
-    pub type DRS_GetCurrentGlobalProfile = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle, pNvDRSProfileHandle: *mut NvDRSProfileHandle) -> NvAPI_Status;
+    pub type DRS_GetCurrentGlobalProfileFn = extern "C" fn(nvDRSSessionHandle: handles::NvDRSSessionHandle, pNvDRSProfileHandle: *mut NvDRSProfileHandle) -> NvAPI_Status;
     pub unsafe fn NvAPI_DRS_GetCurrentGlobalProfile;
 }
 
