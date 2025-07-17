@@ -46,35 +46,48 @@ impl TryFrom<u32> for VsyncMode {
     }
 }
 
-nvenum! {
-    pub enum NVAPI_AA_MODE_REPLAY / AaModeReplay {
-        AA_MODE_REPLAY_SAMPLES_MASK / AaModeReplaySamplesMask = 0x00000070,
-        AA_MODE_REPLAY_SAMPLES_ONE / AaModeReplaySamplesOne = 0x00000000,
-        AA_MODE_REPLAY_SAMPLES_TWO / AaModeReplaySamplesTwo = 0x00000010,
-        AA_MODE_REPLAY_SAMPLES_FOUR / AaModeReplaySamplesFour = 0x00000020,
-        AA_MODE_REPLAY_SAMPLES_EIGHT / AaModeReplaySamplesEight = 0x00000030,
-        AA_MODE_REPLAY_MODE_MASK / AaModeReplayModeMask = 0x0000000f,
-        AA_MODE_REPLAY_MODE_OFF / AaModeReplayModeOff = 0x00000000,
-        AA_MODE_REPLAY_MODE_ALPHA_TEST / AaModeReplayModeAlphaTest = 0x00000001,
-        AA_MODE_REPLAY_MODE_PIXEL_KILL / AaModeReplayModePixelKill = 0x00000002,
-        AA_MODE_REPLAY_MODE_DYN_BRANCH / AaModeReplayModeDynBranch = 0x00000004,
-        AA_MODE_REPLAY_MODE_OPTIMAL / AaModeReplayModeOptimal = 0x00000004,
-        AA_MODE_REPLAY_MODE_ALL / AaModeReplayModeAll = 0x00000008,
-        AA_MODE_REPLAY_MODE_MAX / AaModeReplayModeMax = 0x0000000f,
-        AA_MODE_REPLAY_TRANSPARENCY / AaModeReplayTransparency = 0x00000023,
-        AA_MODE_REPLAY_DISALLOW_TRAA / AaModeReplayDisallowTraa = 0x00000100,
-        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT / AaModeReplayTransparencyDefault = 0x00000000,
-        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT_TESLA / AaModeReplayTransparencyDefaultTesla = 0x00000000,
-        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT_FERMI / AaModeReplayTransparencyDefaultFermi = 0x00000000,
-        AA_MODE_REPLAY_MASK / AaModeReplayMask = 0x0000017f,
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub enum AaModeReplay {
+    AaModeReplaySamplesMask,
+    AaModeReplaySamplesOne,
+    AaModeReplaySamplesTwo,
+    AaModeReplaySamplesFour,
+    AaModeReplaySamplesEight,
+    AaModeReplayModeMask,
+    AaModeReplayModeAlphaTest,
+    AaModeReplayModePixelKill,
+    AaModeReplayModeDynBranch,
+    AaModeReplayModeAll,
+    AaModeReplayTransparency,
+    AaModeReplayDisallowTraa,
+    AaModeReplayMask,
+    AAModeUnknown(u32),
+}
+
+impl std::fmt::Debug for AaModeReplay {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::AaModeReplaySamplesMask => write!(f, "AaModeReplaySamplesMask (0x00000070)"),
+            Self::AaModeReplaySamplesOne => write!(f, "AaModeReplaySamplesOne (0x00000000)"),
+            Self::AaModeReplaySamplesTwo => write!(f, "AaModeReplaySamplesTwo (0x00000010)"),
+            Self::AaModeReplaySamplesFour => write!(f, "AaModeReplaySamplesFour (0x00000020)"),
+            Self::AaModeReplaySamplesEight => write!(f, "AaModeReplaySamplesEight (0x00000030)"),
+            Self::AaModeReplayModeMask => write!(f, "AaModeReplayModeMask (0x0000000f)"),
+            Self::AaModeReplayModeAlphaTest => write!(f, "AaModeReplayModeAlphaTest (0x00000001)"),
+            Self::AaModeReplayModePixelKill => write!(f, "AaModeReplayModePixelKill (0x00000002)"),
+            Self::AaModeReplayModeDynBranch => write!(f, "AaModeReplayModeDynBranch (0x00000004)"),
+            Self::AaModeReplayModeAll => write!(f, "AaModeReplayModeAll (0x00000008)"),
+            Self::AaModeReplayTransparency => write!(f, "AaModeReplayTransparency (0x00000023)"),
+            Self::AaModeReplayDisallowTraa => write!(f, "AaModeReplayDisallowTraa (0x00000100)"),
+            Self::AaModeReplayMask => write!(f, "AaModeReplayMask (0x0000017f)"),
+            Self::AAModeUnknown(value) => write!(f, "AAModeUnknown (x{value:08x})"),
+        }
     }
 }
 
-impl TryFrom<u32> for AaModeReplay {
-    type Error = ();
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        let slf = match value {
+impl From<u32> for AaModeReplay {
+    fn from(value: u32) -> Self {
+        match value {
             0x00000070 => Self::AaModeReplaySamplesMask,
             0x00000000 => Self::AaModeReplaySamplesOne,
             0x00000010 => Self::AaModeReplaySamplesTwo,
@@ -88,10 +101,8 @@ impl TryFrom<u32> for AaModeReplay {
             0x00000023 => Self::AaModeReplayTransparency,
             0x00000100 => Self::AaModeReplayDisallowTraa,
             0x0000017f => Self::AaModeReplayMask,
-            _ => return Err(()),
-        };
-
-        Ok(slf)
+            _ => Self::AAModeUnknown(value),
+        }
     }
 }
 
