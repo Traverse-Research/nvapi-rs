@@ -46,6 +46,66 @@ impl TryFrom<u32> for VsyncMode {
     }
 }
 
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub enum AaModeReplay {
+    AaModeReplaySamplesMask,
+    AaModeReplaySamplesOne,
+    AaModeReplaySamplesTwo,
+    AaModeReplaySamplesFour,
+    AaModeReplaySamplesEight,
+    AaModeReplayModeMask,
+    AaModeReplayModeAlphaTest,
+    AaModeReplayModePixelKill,
+    AaModeReplayModeDynBranch,
+    AaModeReplayModeAll,
+    AaModeReplayTransparency,
+    AaModeReplayDisallowTraa,
+    AaModeReplayMask,
+    AAModeUnknown(u32),
+}
+
+impl std::fmt::Debug for AaModeReplay {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::AaModeReplaySamplesMask => write!(f, "AaModeReplaySamplesMask (0x00000070)"),
+            Self::AaModeReplaySamplesOne => write!(f, "AaModeReplaySamplesOne (0x00000000)"),
+            Self::AaModeReplaySamplesTwo => write!(f, "AaModeReplaySamplesTwo (0x00000010)"),
+            Self::AaModeReplaySamplesFour => write!(f, "AaModeReplaySamplesFour (0x00000020)"),
+            Self::AaModeReplaySamplesEight => write!(f, "AaModeReplaySamplesEight (0x00000030)"),
+            Self::AaModeReplayModeMask => write!(f, "AaModeReplayModeMask (0x0000000f)"),
+            Self::AaModeReplayModeAlphaTest => write!(f, "AaModeReplayModeAlphaTest (0x00000001)"),
+            Self::AaModeReplayModePixelKill => write!(f, "AaModeReplayModePixelKill (0x00000002)"),
+            Self::AaModeReplayModeDynBranch => write!(f, "AaModeReplayModeDynBranch (0x00000004)"),
+            Self::AaModeReplayModeAll => write!(f, "AaModeReplayModeAll (0x00000008)"),
+            Self::AaModeReplayTransparency => write!(f, "AaModeReplayTransparency (0x00000023)"),
+            Self::AaModeReplayDisallowTraa => write!(f, "AaModeReplayDisallowTraa (0x00000100)"),
+            Self::AaModeReplayMask => write!(f, "AaModeReplayMask (0x0000017f)"),
+            Self::AAModeUnknown(value) => write!(f, "AAModeUnknown (x{value:08x})"),
+        }
+    }
+}
+
+impl From<u32> for AaModeReplay {
+    fn from(value: u32) -> Self {
+        match value {
+            0x00000070 => Self::AaModeReplaySamplesMask,
+            0x00000000 => Self::AaModeReplaySamplesOne,
+            0x00000010 => Self::AaModeReplaySamplesTwo,
+            0x00000020 => Self::AaModeReplaySamplesFour,
+            0x00000030 => Self::AaModeReplaySamplesEight,
+            0x0000000f => Self::AaModeReplayModeMask,
+            0x00000001 => Self::AaModeReplayModeAlphaTest,
+            0x00000002 => Self::AaModeReplayModePixelKill,
+            0x00000004 => Self::AaModeReplayModeDynBranch,
+            0x00000008 => Self::AaModeReplayModeAll,
+            0x00000023 => Self::AaModeReplayTransparency,
+            0x00000100 => Self::AaModeReplayDisallowTraa,
+            0x0000017f => Self::AaModeReplayMask,
+            _ => Self::AAModeUnknown(value),
+        }
+    }
+}
+
 nvenum! {
     pub enum NVDRS_SETTING_LOCATION / DrsSettingLocation {
         NVDRS_CURRENT_PROFILE_LOCATION / Current = 0,
