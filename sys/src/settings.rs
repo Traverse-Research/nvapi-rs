@@ -47,6 +47,55 @@ impl TryFrom<u32> for VsyncMode {
 }
 
 nvenum! {
+    pub enum NVAPI_AA_MODE_REPLAY / AaModeReplay {
+        AA_MODE_REPLAY_SAMPLES_MASK / AaModeReplaySamplesMask = 0x00000070,
+        AA_MODE_REPLAY_SAMPLES_ONE / AaModeReplaySamplesOne = 0x00000000,
+        AA_MODE_REPLAY_SAMPLES_TWO / AaModeReplaySamplesTwo = 0x00000010,
+        AA_MODE_REPLAY_SAMPLES_FOUR / AaModeReplaySamplesFour = 0x00000020,
+        AA_MODE_REPLAY_SAMPLES_EIGHT / AaModeReplaySamplesEight = 0x00000030,
+        AA_MODE_REPLAY_MODE_MASK / AaModeReplayModeMask = 0x0000000f,
+        AA_MODE_REPLAY_MODE_OFF / AaModeReplayModeOff = 0x00000000,
+        AA_MODE_REPLAY_MODE_ALPHA_TEST / AaModeReplayModeAlphaTest = 0x00000001,
+        AA_MODE_REPLAY_MODE_PIXEL_KILL / AaModeReplayModePixelKill = 0x00000002,
+        AA_MODE_REPLAY_MODE_DYN_BRANCH / AaModeReplayModeDynBranch = 0x00000004,
+        AA_MODE_REPLAY_MODE_OPTIMAL / AaModeReplayModeOptimal = 0x00000004,
+        AA_MODE_REPLAY_MODE_ALL / AaModeReplayModeAll = 0x00000008,
+        AA_MODE_REPLAY_MODE_MAX / AaModeReplayModeMax = 0x0000000f,
+        AA_MODE_REPLAY_TRANSPARENCY / AaModeReplayTransparency = 0x00000023,
+        AA_MODE_REPLAY_DISALLOW_TRAA / AaModeReplayDisallowTraa = 0x00000100,
+        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT / AaModeReplayTransparencyDefault = 0x00000000,
+        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT_TESLA / AaModeReplayTransparencyDefaultTesla = 0x00000000,
+        AA_MODE_REPLAY_TRANSPARENCY_DEFAULT_FERMI / AaModeReplayTransparencyDefaultFermi = 0x00000000,
+        AA_MODE_REPLAY_MASK / AaModeReplayMask = 0x0000017f,
+    }
+}
+
+impl TryFrom<u32> for AaModeReplay {
+    type Error = ();
+
+    fn try_from(value: u32) -> Result<Self, Self::Error> {
+        let slf = match value {
+            0x00000070 => Self::AaModeReplaySamplesMask,
+            0x00000000 => Self::AaModeReplaySamplesOne,
+            0x00000010 => Self::AaModeReplaySamplesTwo,
+            0x00000020 => Self::AaModeReplaySamplesFour,
+            0x00000030 => Self::AaModeReplaySamplesEight,
+            0x0000000f => Self::AaModeReplayModeMask,
+            0x00000001 => Self::AaModeReplayModeAlphaTest,
+            0x00000002 => Self::AaModeReplayModePixelKill,
+            0x00000004 => Self::AaModeReplayModeDynBranch,
+            0x00000008 => Self::AaModeReplayModeAll,
+            0x00000023 => Self::AaModeReplayTransparency,
+            0x00000100 => Self::AaModeReplayDisallowTraa,
+            0x0000017f => Self::AaModeReplayMask,
+            _ => return Err(()),
+        };
+
+        Ok(slf)
+    }
+}
+
+nvenum! {
     pub enum NVDRS_SETTING_LOCATION / DrsSettingLocation {
         NVDRS_CURRENT_PROFILE_LOCATION / Current = 0,
         NVDRS_GLOBAL_PROFILE_LOCATION / Global = 1,
