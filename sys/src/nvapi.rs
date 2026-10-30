@@ -9,6 +9,8 @@ pub type QueryInterfaceFn = extern "C" fn(id: u32) -> *const c_void;
 pub const LIBRARY_NAME: &'static [u8; 10] = b"nvapi.dll\0";
 #[cfg(all(windows, target_pointer_width = "64"))]
 pub const LIBRARY_NAME: &'static [u8; 12] = b"nvapi64.dll\0";
+#[cfg(target_os = "linux")]
+pub const LIBRARY_NAME: &'static [u8; 19] = b"libnvidia-api.so.1\0";
 
 pub const FN_NAME: &'static [u8; 21] = b"nvapi_QueryInterface\0";
 
@@ -18,7 +20,7 @@ pub unsafe fn set_query_interface(ptr: QueryInterfaceFn) {
     QUERY_INTERFACE_CACHE.store(ptr as usize, Ordering::Relaxed);
 }
 
-#[cfg(not(windows))]
+#[cfg(not(any(windows, target_os = "linux")))]
 pub fn nvapi_QueryInterface(id: u32) -> crate::Result<usize> {
     // TODO: Apparently nvapi is available for macOS?
     Err(Status::LibraryNotFound)
@@ -38,6 +40,37 @@ pub fn nvapi_QueryInterface(id: u32) -> crate::Result<usize> {
                     Err(Status::LibraryNotFound)
                 } else {
                     let ptr = GetProcAddress(lib, FN_NAME.as_ptr() as *const c_char);
+                    if ptr.is_null() {
+                        Err(Status::LibraryNotFound)
+                    } else {
+                        QUERY_INTERFACE_CACHE.store(ptr as usize, Ordering::Relaxed);
+                        Ok(ptr as usize)
+                    }
+                }
+            },
+            ptr => Ok(ptr),
+        }?;
+
+        match mem::transmute::<_, QueryInterfaceFn>(ptr)(id) as usize {
+            0 => Err(Status::NoImplementation),
+            ptr => Ok(ptr),
+        }
+    }
+}
+
+#[cfg(target_os = "linux")]
+pub fn nvapi_QueryInterface(id: u32) -> crate::Result<usize> {
+    use std::mem;
+    use std::os::raw::c_char;
+
+    unsafe {
+        let ptr = match QUERY_INTERFACE_CACHE.load(Ordering::Relaxed) {
+            0 => {
+                let lib = libc::dlopen(LIBRARY_NAME.as_ptr() as *const c_char, libc::RTLD_NOW | libc::RTLD_LOCAL);
+                if lib.is_null() {
+                    Err(Status::LibraryNotFound)
+                } else {
+                    let ptr = libc::dlsym(lib, FN_NAME.as_ptr() as *const c_char);
                     if ptr.is_null() {
                         Err(Status::LibraryNotFound)
                     } else {
